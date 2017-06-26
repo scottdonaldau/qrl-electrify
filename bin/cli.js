@@ -37,7 +37,11 @@ program
 program
   .option('-i, --input    <path>', 'meteor app dir       | default = .')
   .option('-o, --output   <path>', 'output dir           | default = .electrify/.dist')
-  .option('-s, --settings <path>', 'meteor settings file | default = null (optional)');
+  .option('-s, --settings <path>', 'meteor settings file | default = null (optional)')
+  .option('-t, --temp     <path>', 'electrify temp folder | default = system temp folder')
+  .option('-a, --arch     <arch>', 'arch to build for | default = current arch')
+  .option('-p, --platform <platform>', 'platform to build for | default = current platform')
+;
 
 program
   .command('run')
@@ -127,6 +131,14 @@ function electrify(create) {
     process.exit();
   }
 
+  if(program.temp && !fs.existsSync(program.temp)) {
+    console.error('temp folder doesn\'t exist\n  ' + program.temp);
+    process.exit();
+  }
+
+  //TODO: check arch and platform
+  var buildSettings = _.pick(program, ['temp', 'arch', 'platform']);
+
   // if electrify folder doesn't exist
   if(create) {
 
@@ -149,7 +161,8 @@ function electrify(create) {
     join(input, '.electrify'),
     program.output,
     parse_meteor_settings(),
-    true
+    true,
+    buildSettings
   );
 }
 
