@@ -7,7 +7,6 @@ var program   = require('commander');
 var spawn     = require('child_process').spawn;
 var log       = console.log;
 var _         = require('lodash');
-var shell     = require('shelljs');
 
 program
   .usage('[command] [options]')
@@ -35,11 +34,11 @@ program
   });
 
 program
-  .option('-i, --input    <path>', 'meteor app dir       | default = .')
-  .option('-o, --output   <path>', 'output dir           | default = .electrify/.dist')
-  .option('-s, --settings <path>', 'meteor settings file | default = null (optional)')
+  .option('-i, --input    <path>', 'meteor app dir        | default = .')
+  .option('-o, --output   <path>', 'output dir            | default = .electrify/.dist')
+  .option('-s, --settings <path>', 'meteor settings file  | default = null (optional)')
   .option('-t, --temp     <path>', 'electrify temp folder | default = system temp folder')
-  .option('-a, --arch     <arch>', 'arch to build for | default = current arch')
+  .option('-a, --arch     <arch>', 'arch to build for     | default = current arch')
   .option('-p, --platform <platform>', 'platform to build for | default = current platform')
 ;
 
@@ -97,7 +96,7 @@ function run(){
   if(has_local_electrify())
     run_electron();
   else if(is_meteor_app())
-    electrify(true).app.init(run_electron);
+    electrify().app.init(run_electron);
 }
 
 function bundle(){
@@ -110,7 +109,7 @@ function package(){
 
 
 
-function electrify(create) {
+function electrify() {
   var input;
 
   // validates input dir (app-root folder)
@@ -136,26 +135,7 @@ function electrify(create) {
     process.exit();
   }
 
-  //TODO: check arch and platform
   var buildSettings = _.pick(program, ['temp', 'arch', 'platform']);
-
-  // if electrify folder doesn't exist
-  if(create) {
-
-    // get list of meteor installed packages
-    var list = fs.readFileSync(join(input, '.meteor', 'packages'), 'utf-8');
-
-    // check if electrify is installed
-    if(!/^\s*arboleya:electrify\s*$/gm.test(list)) {
-
-      // if its not installed, install it
-      var pwd = shell.pwd();
-      
-      shell.cd(input);
-      shell.exec('meteor add arboleya:electrify');
-      shell.cd(pwd);
-    }
-  }
 
   return require('..')(
     join(input, '.electrify'),

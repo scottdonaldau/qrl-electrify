@@ -41,7 +41,7 @@ describe('[electrify] run and package', function(){
     tests_dir  = path.join(require('os').tmpdir(), 'electrify-tests');
 
     root_dir = path.join(__dirname, '..');
-    npm_dir  = path.join(root_dir, '.npm', 'node_modules', 'electrify');
+    npm_dir  = path.join(root_dir, '.npm', 'node_modules', 'meteor-electrify');
 
     node_mods_dir          = path.join(tests_dir, 'node_modules');
     meteor_app_dir         = path.join(tests_dir, 'leaderboard');
@@ -64,7 +64,7 @@ describe('[electrify] run and package', function(){
     shell.rm('-rf', tests_dir);
 
     shell.mkdir('-p', node_mods_dir);
-    shell.ln('-s', root_dir, path.join(node_mods_dir, 'electrify'));
+    shell.ln('-s', root_dir, path.join(node_mods_dir, 'meteor-electrify'));
 
     shell.mkdir('-p', meteor_electrified_dir);
     electrify = Electrify(meteor_electrified_dir);

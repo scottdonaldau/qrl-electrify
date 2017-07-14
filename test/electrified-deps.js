@@ -19,7 +19,7 @@ describe('[electrify] .electrified dependencies', function(){
   var tests_dir  = path.join(require('os').tmpdir(), 'electrify-tests');
 
   var root_dir = path.join(__dirname, '..');
-  var npm_dir  = path.join(root_dir, '.npm', 'node_modules', 'electrify');
+  var npm_dir  = path.join(root_dir, '.npm', 'node_modules', 'meteor-electrify');
 
   var meteor_app_dir    = path.join(tests_dir, 'leaderboard');
   var packages_dir      = path.join(meteor_app_dir, 'packages');
@@ -78,7 +78,7 @@ describe('[electrify] .electrified dependencies', function(){
     electrify.scaffold.prepare();
 
     var node_mods           = path.join(electrify_dir, 'node_modules');
-    var node_mods_electrify = path.join(node_mods, 'electrify');
+    var node_mods_electrify = path.join(node_mods, 'meteor-electrify');
 
     // sets a previous version already published to ensure its being
     // installed at least

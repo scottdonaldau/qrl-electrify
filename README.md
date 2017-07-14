@@ -1,11 +1,11 @@
-# Electrify [![windows](https://img.shields.io/appveyor/ci/arboleya/electrify.svg?label=windows)](https://ci.appveyor.com/project/arboleya/electrify) [![travis](https://img.shields.io/travis/arboleya/electrify/master.svg?label=osx/linux)](https://travis-ci.org/arboleya/electrify) [![coverage](https://img.shields.io/codeclimate/coverage/github/arboleya/electrify.svg)](https://codeclimate.com/github/arboleya/electrify/coverage) [![join the chat at https://gitter.im/arboleya/electrify](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arboleya/electrify)
+# (Meteor-)Electrify [![join the chat at https://gitter.im/arboleya/electrify](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arboleya/electrify)
 
 Easily package your Meteor apps with Electron, and *butter*.
 
 ## TL;DR
 
 ````shell
-npm install -g electrify
+npm install -g meteor-electrify
 cd /your/meteor/app
 electrify
 ````
@@ -20,6 +20,7 @@ $ electrify -h
 
   Usage: electrify [command] [options]
 
+
   Commands:
 
     run       (default) start meteor app within electrify context
@@ -28,17 +29,20 @@ $ electrify -h
 
   Options:
 
-    -h, --help             output usage information
-    -V, --version          output the version number
-    -i, --input    <path>  meteor app dir       | default = .
-    -o, --output   <path>  output dir           | default = .electrify/.dist
-    -s, --settings <path>  meteor settings file | default = null (optional)
+    -h, --help                 output usage information
+    -V, --version              output the version number
+    -i, --input    <path>      meteor app dir        | default = .
+    -o, --output   <path>      output dir            | default = .electrify/.dist
+    -s, --settings <path>      meteor settings file  | default = null (optional)
+    -t, --temp     <path>      electrify temp folder | default = system temp folder
+    -a, --arch     <arch>      arch to build for     | default = current arch
+    -p, --platform <platform>  platform to build for | default = current platform
 
   Examples:
 
     # cd into meteor dir first
     cd /your/meteor/app
-
+    
     electrify
     electrify run
     electrify package
@@ -46,9 +50,10 @@ $ electrify -h
     electrify package -o /dist/dir -s file.json
     electrify package -i /app/dir -o /dist/dir -s dev.json
     electrify package -- <electron-packager-options>
-
+    
     # more info about electron packager options:
     # ~> https://www.npmjs.com/package/electron-packager
+
 ````
 
 ## Installation
@@ -117,6 +122,9 @@ Perhaps you can live with it? :)
 `--arch=all`. It won't work, Electrify can bundle Meteor apps only for the
 platform you're running on.
 
+> **NOTICE** you can use the --arch and --platform of electrify BUT you won't get a working version
+for different platforms/archs out of the box. It's possible to make the generated application working
+with further steps that are not in scope of this project.
 
 ## Options
 
@@ -126,6 +134,9 @@ platform you're running on.
 1. `-s, --settings` Sets path for Meteor
 [settings](http://docs.meteor.com/#/full/meteor_settings) file, this will be
 available inside your Meteor code both in development and after being packaged.
+1. `-t, --temp` - Sets a temp folder other than the system temp folder to prevent moving errors (tmp and destination should be on the same partition)
+1. `-a, --arch` - Set a different arch for building NOTICE: only the current arch will work "out of the box"
+1. `-p, --platform` - Set a different platform for building NOTICE: only the current platform will work "out of the box"
 
 ## Structure
 
@@ -167,40 +178,37 @@ the app folder (which gets deleted when new version is installed).
 Let's see how one would be able to do a simple SplashScreen:
 
 ````javascript
-var app       = require('app');
-var browser   = require('browser-window');
-var electrify = require('electrify')(__dirname);
+const {app, BrowserWindow} = require('electron');
+const electrify = require('meteor-electrify')(__dirname);
 
-var window = null;
-var splash = null; // splash variable
+let window;
+let splash;
 
 app.on('ready', function() {
-  splash = new browser({ // starts splash window
+  splash = new BrowserWindow({ // starts splash window
     // >>> your configs here
   });
   splash.loadUrl('./splash.html'); // create the ".electrify/splash.html" file
   
   // then move along and start electrify
   electrify.start(function(meteor_root_url) {
-
     // before opening a new window with your app, destroy the splash window
     splash.close(); // >>> or .destroy(), check what works for you
 
-
     // from here on, well, nothing changes..
 
-
-    window = new browser({
+    // creates a new electron window
+    window = new BrowserWindow({
       width: 1200, height: 900,
       'node-integration': false // node integration must to be off
     });
-    window.loadUrl(meteor_root_url);
+
+    // open up meteor root url
+    window.loadURL(meteor_root_url);
   });
 });
 
-
 // ....
-
 ````
 
 ## Meteor x Electron integration
@@ -220,25 +228,7 @@ electrify.methods({
 });
 ````
 
-Then, in your Meteor code (client and server), you can call this method like:
-
-````javascript
-// Electrify.call(method_name, args, done_callback);
-Electrify.call('hello.world', ['anderson', 'arboleya'], function(err, msg) {
-  console.log(msg); // Hello anderson arboleya!
-});
-````
-
-> **IMPORTANT**
-> 
-> You can only call methods after the connection is made between Meteor and
-> Electron, to make sure it's ready you can wrap your code in a startup block:
-> 
-> ````javascript
-> Electrify.startup(function(){
->   Electrify.call(...);
-> });
-> ````
+Then, in your Meteor code (client and server), you can use the meteor-electrify-client to call these methods. 
 
 ## Upgrading
 
@@ -254,7 +244,7 @@ Once these files exists on disk, they *will not* be overwritten.
 
 ### ~> api
 
-As these files above is never overwritten, in case of any API change that needs
+As these files above will never be overwritten, in case of any API changes that needs
 adjustments, these will have to be made manually.
 
 ### ~> version matching
@@ -282,4 +272,5 @@ the version of Meteor and Electrify, and any other info you may find usefull.
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Anderson Arboleya
+Copyright (c) 2017 Sebastian Große  
+Electrify originally created by Copyright (c) 2015 Anderson Arboleya

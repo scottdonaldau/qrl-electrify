@@ -13,7 +13,6 @@ var node_bin = process.platform == 'win32' ? 'node.exe' : 'node';
 var NODE_MODS = path.join(__dirname, 'node_modules');
 var ISTANBUL  = path.join(NODE_MODS, 'istanbul', 'lib', 'cli.js');
 var _MOCHA    = path.join(NODE_MODS, 'mocha', 'bin', '_mocha');
-var _MOCHA    = path.join(NODE_MODS, 'mocha', 'bin', '_mocha');
 var NPMCHECK  = path.join(NODE_MODS, 'npm-check', 'lib', 'cli.js');
 
 // setup local env with local symlinks and proper configs
@@ -23,7 +22,6 @@ target.setup = function() {
   // list folder paths
   var parent       = path.join(__dirname, '..');
   var leaderboard  = path.join(parent, 'leaderboard');
-  var packages_dir = path.join(leaderboard, 'packages');
 
   // reset folders
   shell.exec('npm link');
@@ -35,38 +33,15 @@ target.setup = function() {
     cwd: parent
   }).on('exit', function(){
 
-    // links arboleya:electrify inside meteor
-    shell.mkdir('-p', packages_dir);
-    shell.ln('-s', __dirname, path.join(packages_dir, 'arboleya-electrify'));
-
     // removes mobile platforms
     spawn(meteor_bin, ['remove-platform', 'ios', 'android'], {
       stdio: 'inherit',
       cwd: leaderboard
     }).on('exit', function(){
-      
-       // adding electrify meteor package
-      spawn(meteor_bin, ['add', 'arboleya:electrify'], {
-        stdio: 'inherit',
-        cwd: leaderboard,
-        // modify env var so electrify package will know how to proceed,
-        // fetching the npm package locally or from remote npm registry
-        env: _.extend({
-          DEVELECTRIFY: true,
-          LOGELECTRIFY: 'ALL'
-        }, process.env)
-
-      // finish
-      }).on('exit', function(){
         process.exit();
-      });
-
     });
   });
-
 };
-
-
 
 // start test app in dev mode
 target.dev = function(action){
@@ -169,13 +144,6 @@ target['test.cover.send'] = function() {
 target['update.version'] = function(version) {
   var filepath, content, replacement;
 
-  // package.js
-  replacement  = '$1'+ version[0] + "'";
-  filepath     = path.join(__dirname, 'package.js');
-  content      = fs.readFileSync(filepath, 'utf-8');
-  content      = content.replace(/(^var VERSION = ')[0-9\.]+'/i, replacement);
-  fs.writeFileSync(filepath, content);
-
   // package.json
   replacement  = '"version": "'+ version[0];
   filepath     = path.join(__dirname, 'package.json');
@@ -191,7 +159,6 @@ target['update.version'] = function(version) {
   fs.writeFileSync(filepath, content);
 
   //HISTORY.md
-  replacement  = 'this.version = \''+ version[0];
   filepath     = path.join(__dirname, 'HISTORY.md');
   content      = fs.readFileSync(filepath, 'utf-8');
   fs.writeFileSync(filepath, [
@@ -219,7 +186,6 @@ target.publish = function(){
   shell.exec('git tag -a '+ version +' -m "Releasing '+ version +'"');
   shell.exec('git push origin master --tags');
   shell.exec('npm publish');
-  shell.exec('meteor publish');
 };
 
 

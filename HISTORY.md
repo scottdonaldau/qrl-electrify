@@ -1,3 +1,14 @@
+3.0.0 / 2017-07-13
+==================
+  * Removed the atmosphere part of electrify -> created new meteor-electrify-client npm package
+  * Updated to use current versions of Electron (1.6.11) and electron-packager
+  * Fix mongodb problems in Windows for mongo >= 3.2 used by Meteor >= 1.4
+  * Fix problem in Windows when no active network is present (use 127.0.0.1 instead of localhost)
+  * Add argument to set the temporary folder
+  * Add arguments to set the arch and platform
+
+## History of original electrify project created by Anderson Arboleya
+
 2.1.4 / 2015-12-14
 ===================
   * fixing windows env initialization
