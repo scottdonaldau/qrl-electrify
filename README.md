@@ -86,18 +86,36 @@ npm package. The following variables are automatically set:
   * `--out` -- *comes from cli option [-o, --out]*
   * `--arch` -- *comes from system [current arch]*
   * `--platform` -- *comes from system [current platform]*
-  * `--version` -- *comes from .electrify/package.json [current app version]*
+  * `--app-version` -- *comes from .electrify/package.json [current app version]*
+  * `--electron-version` -- *comes from the used electron npm package
+  * `--tmpdir` -- *disabled
 
 You can overwrite these default values and also set others by passing custom
 arguments directly to `electron-packager` after `--`, i.e:
 
 ````shell
 cd /your/meteor/app
-electrify package -- --icon=/folder/x/img/icon.png --version=x.y.z
+electrify package -- --icon=/folder/x/img/icon.png --app-version=x.y.z
 ````
 
 All the available options for `electron-packager` can be found here:
-https://www.npmjs.com/package/electron-packager
+https://github.com/electron-userland/electron-packager/blob/master/usage.txt
+
+
+Alternatively you can add an electronPackager object in package.json of the .electrify folder
+with [options for the electron-packager](https://github.com/electron-userland/electron-packager/blob/master/docs/api.md). For the icon property it is possible to provide an object
+instead of string to define different icons for the different platforms.
+f.e.
+```json
+{
+  "electronPackager": {
+     "icon": {
+       "win32": "../something.ico",
+       "darwin": "../mac.icns"
+     }
+  }
+}
+```
 
 ### Notes
 
@@ -131,12 +149,12 @@ with further steps that are not in scope of this project.
 1. `-i, --input` - Meteor app folder, default is current directory (`process.cwd()`).
 1. `-o, --output` - Sets output folder for your packaged app, default is
 `/your/meteor/app/.dist`
-1. `-s, --settings` Sets path for Meteor
+1. `-s, --settings` - Sets path for Meteor
 [settings](http://docs.meteor.com/#/full/meteor_settings) file, this will be
 available inside your Meteor code both in development and after being packaged.
 1. `-t, --temp` - Sets a temp folder other than the system temp folder to prevent moving errors (tmp and destination should be on the same partition)
-1. `-a, --arch` - Set a different arch for building NOTICE: only the current arch will work "out of the box"
-1. `-p, --platform` - Set a different platform for building NOTICE: only the current platform will work "out of the box"
+1. `-a, --arch` - Sets a different arch for building NOTICE: only the current arch will work "out of the box"
+1. `-p, --platform` - Sets a different platform for building NOTICE: only the current platform will work "out of the box"
 
 ## Structure
 
@@ -178,7 +196,7 @@ the app folder (which gets deleted when new version is installed).
 Let's see how one would be able to do a simple SplashScreen:
 
 ````javascript
-const {app, BrowserWindow} = require('electron');
+const { app, BrowserWindow } = require('electron');
 const electrify = require('meteor-electrify')(__dirname);
 
 let window;
@@ -200,7 +218,7 @@ app.on('ready', function() {
     // creates a new electron window
     window = new BrowserWindow({
       width: 1200, height: 900,
-      'node-integration': false // node integration must to be off
+      nodeIntegration: false // node integration must to be off
     });
 
     // open up meteor root url
