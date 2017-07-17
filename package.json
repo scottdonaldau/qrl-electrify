@@ -12,12 +12,12 @@
   "author": "Anderson Arboleya <anderson@arboleya.me>",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.8.1",
-    "electron-packager": "^5.1.1",
-    "electron-prebuilt": "^0.35.4",
+    "commander": "^2.10.0",
+    "electron-packager": "^8.7.1",
+    "electron": "^1.6.11",
     "lodash": "^3.10.1",
     "server-destroy": "^1.0.1",
-    "shelljs": "^0.5.3",
+    "shelljs": "^0.7.8",
     "sockjs": "^0.3.15"
   },
   "devDependencies": {

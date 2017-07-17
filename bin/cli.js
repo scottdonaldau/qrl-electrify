@@ -66,7 +66,7 @@ if(process.argv.length == 2 || -1 == 'run|bundle|package'.indexOf(cmd) ){
 function run_electron(){
   var input         = program.input || process.cwd();
   var electrify_dir = join(input, '.electrify');
-  var electron_path = require('electron-prebuilt');
+  var electron_path = require('electron');
   var settings      = parse_meteor_settings(true);
 
   if(settings)
@@ -218,12 +218,17 @@ function parse_packager_options(){
 
       var parts = arg.split('=');
       var key = parts[0];
-      var val = 'undefined' == typeof(parts[1]) ? true : parts[1];
+      var val = 'undefined' === typeof(parts[1]) ? true : parts[1];
     
-      if(~names.indexOf(key))
-        options[key.slice(2)] = val;
-      else
+      if(~names.indexOf(key)) {
+        if (key === '--app-version') {
+            options.appVersion = val;
+        } else {
+          options[key.slice(2)] = val;
+        }
+      } else {
         log('Option `' + key + '` doens\'t exist, ignoring it');
+      }
     });
   }
 
