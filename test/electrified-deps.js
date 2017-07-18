@@ -81,7 +81,7 @@ describe('[electrify] .electrified dependencies', function(){
     var pkg_path = path.join(electrify_dir, 'package.json');
     var pkg      = require(pkg_path);
 
-    pkg.dependencies['meteor-electrify'] = '1.2.2';
+    pkg.dependencies['meteor-electrify'] = '3.0.0';
     fs.writeFileSync(pkg_path, JSON.stringify(pkg, null, 2));
 
     electrify.app.ensure_deps(function(){

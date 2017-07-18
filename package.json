@@ -1,12 +1,12 @@
 {
   "name": "meteor-electrify",
-  "version": "3.0.0-alpha.0",
+  "version": "3.0.0",
   "main": "lib/index.js",
   "bin": {
     "electrify": "bin/cli.js"
   },
   "engines": {
-    "node": ">=0.10.36"
+    "node": ">=4.0.0"
   },
   "description": "Package your Meteor apps with Electron, and butter.",
   "author": "Sebastian Große",

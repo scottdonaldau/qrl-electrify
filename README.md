@@ -87,8 +87,8 @@ npm package. The following variables are automatically set:
   * `--arch` -- *comes from system [current arch]*
   * `--platform` -- *comes from system [current platform]*
   * `--app-version` -- *comes from .electrify/package.json [current app version]*
-  * `--electron-version` -- *comes from the used electron npm package
-  * `--tmpdir` -- *disabled
+  * `--electron-version` -- *comes from the used electron npm package*
+  * `--tmpdir` -- *disabled*
 
 You can overwrite these default values and also set others by passing custom
 arguments directly to `electron-packager` after `--`, i.e:
