@@ -1,4 +1,4 @@
-# (Meteor-)Electrify [![join the chat at https://gitter.im/arboleya/electrify](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arboleya/electrify)
+# (Meteor-)Electrify [![windows](https://img.shields.io/appveyor/ci/Mairu/meteor-electrify.svg?label=windows)](https://ci.appveyor.com/project/Mairu/meteor-electrify) [![travis](https://img.shields.io/travis/Mairu/meteor-electrify/master.svg?label=osx/linux)](https://travis-ci.org/Mairu/meteor-electrify) [![coverage](https://img.shields.io/codeclimate/coverage/github/Mairu/meteor-electrify.svg)](https://codeclimate.com/github/Mairu/meteor-electrify/coverage) [![join the chat at https://gitter.im/arboleya/electrify](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arboleya/electrify)
 
 Easily package your Meteor apps with Electron, and *butter*.
 

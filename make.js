@@ -7,6 +7,7 @@ var spawn   = require('child_process').spawn;
 var _        = require('lodash');
 var shell    = require('shelljs');
 
+var git_bin = process.platform == 'win32' ? 'git.exe' : 'git';
 var meteor_bin = process.platform == 'win32' ? 'meteor.bat' : 'meteor';
 var node_bin = process.platform == 'win32' ? 'node.exe' : 'node';
 
@@ -28,7 +29,7 @@ target.setup = function() {
   shell.rm('-rf', leaderboard);
 
   // create sample test app in parent dir
-  spawn(meteor_bin, ['create', '--example', 'leaderboard'], {
+  spawn(git_bin, ['clone', '--depth=1', 'https://github.com/meteor/leaderboard'], {
     stdio: 'inherit',
     cwd: parent
   }).on('exit', function(){

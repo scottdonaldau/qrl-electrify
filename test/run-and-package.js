@@ -21,14 +21,13 @@ describe('[electrify] run and package', function(){
 
   var node_mods_dir;
   var meteor_app_dir;
-  var packages_dir;
-  var electrify_dir;
   var meteor_electrified_dir;
   
   var electrify;
   var pkg_app_dir;
 
   var meteor_bin = 'meteor' + (process.platform == 'win32' ? '.bat' : '');
+  var git_bin = 'git' + (process.platform == 'win32' ? '.exe' : '');
 
   before(function(done){
 
@@ -46,9 +45,7 @@ describe('[electrify] run and package', function(){
     node_mods_dir          = path.join(tests_dir, 'node_modules');
     meteor_app_dir         = path.join(tests_dir, 'leaderboard');
     meteor_electrified_dir = path.join(meteor_app_dir, '.electrify');
-    packages_dir           = path.join(meteor_app_dir, 'packages');
-    electrify_dir          = path.join(packages_dir, 'arboleya-electrify');
-    
+
     var name = 'my-electrified-app';
     var plat = process.platform;
     var arch = process.arch;
@@ -66,37 +63,34 @@ describe('[electrify] run and package', function(){
     shell.mkdir('-p', node_mods_dir);
     shell.ln('-s', root_dir, path.join(node_mods_dir, 'meteor-electrify'));
 
-    shell.mkdir('-p', meteor_electrified_dir);
-    electrify = Electrify(meteor_electrified_dir);
-    shell.rm('-rf', electrify.env.core.root);
+    // creates a sample app and add the package
+    // console.log('Fetch meteor sample leaderboard app');
+    spawn(git_bin, ['clone', '--depth=1', 'https://github.com/meteor/leaderboard'], {
+      cwd: tests_dir,
+      stdio: stdio_config
+    }).on('exit', function(){
+      //init electrify
+      shell.mkdir('-p', meteor_electrified_dir);
+      electrify = Electrify(meteor_electrified_dir);
+      shell.rm('-rf', electrify.env.core.root);
 
-    electrify.app.init(function(){
-
-      // crates a sample app and add the package
-      spawn(meteor_bin, ['create', '--example', 'leaderboard'], {
-        cwd: tests_dir,
-        stdio: stdio_config
-      }).on('exit', function(){
-
-        // creates internal folder and link it with the package
-        shell.mkdir('-p', packages_dir);
-        shell.ln('-s', path.join(__dirname, '..'), electrify_dir);
-
+      electrify.app.init(function(){
         // remove mobile platforms
         spawn(meteor_bin, ['remove-platform', 'android', 'ios'], {
           cwd: meteor_app_dir,
           stdio: stdio_config
         }).on('exit', function(){
+          fs.writeFileSync(path.join(meteor_app_dir, 'package.json'),
+            JSON.stringify({name: "meteor-leaderboard-example"}));
 
-          // add electrify package
-          spawn(meteor_bin, ['add', 'arboleya:electrify'], {
+          // add electrify client package
+          spawn(meteor_bin, ['npm', 'install', '--save', 'meteor-electrify-client'], {
             cwd: meteor_app_dir,
             stdio: stdio_config,
             env: process.env
           }).on('exit', done);
         });
       });
-      
     });
 
   });
@@ -138,8 +132,8 @@ describe('[electrify] run and package', function(){
   it('should start / stop the app, in production', function(done){
 
     var entry_point = shell.find(pkg_app_dir).filter(function(file) {
-      return /app(\\|\/)index\.js$/m.test(file);
-    });
+      return /app([\\\/])index\.js$/m.test(file);
+    })[0];
     
     var base_dir = path.dirname(entry_point);
 
@@ -169,8 +163,8 @@ describe('[electrify] run and package', function(){
   it('should start / stop the app, in production, AGAIN', function(done){
 
     var entry_point = shell.find(pkg_app_dir).filter(function(file) {
-      return /app(\\|\/)index\.js$/m.test(file);
-    });
+      return /app([\\\/])index\.js$/m.test(file);
+    })[0];
     
     var base_dir = path.dirname(entry_point);
 
@@ -208,6 +202,8 @@ describe('[electrify] run and package', function(){
     var leaderboard         = path.join(meteor_app_dir, 'leaderboard.js');
     var leaderboard_content = fs.readFileSync(leaderboard, 'utf8');
     var leaderboard_call    = [
+      "var ElectrifyClient = Npm.require('meteor-electrify-client').ElectrifyClient;",
+      "var Electrify = new ElectrifyClient();",
       "Electrify.startup(function() {",
       "  if(Meteor.isClient) return;",
       "  var fs = Npm.require('fs');",
