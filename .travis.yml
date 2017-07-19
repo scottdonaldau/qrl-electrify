@@ -2,7 +2,7 @@ os:
   - linux
   - osx
 
-languange: node_js
+language: node_js
 node_js:
   - "4.0.0"
 
@@ -12,7 +12,7 @@ cache:
 
 install:
   - npm install
-  - curl http://install.meteor.com | /bin/sh
+  - curl https://install.meteor.com | /bin/sh
   - node --version
   - meteor --version
 
