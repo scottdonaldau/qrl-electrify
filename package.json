@@ -21,7 +21,7 @@
     "sockjs": "^0.3.15"
   },
   "devDependencies": {
-    "codeclimate-test-reporter": "^0.1.1",
+    "codeclimate-test-reporter": "^0.5.0",
     "istanbul": "^0.4.1",
     "mocha": "^2.3.4",
     "npm-check": "^4.1.3",

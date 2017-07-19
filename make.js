@@ -15,6 +15,8 @@ var NODE_MODS = path.join(__dirname, 'node_modules');
 var ISTANBUL  = path.join(NODE_MODS, 'istanbul', 'lib', 'cli.js');
 var _MOCHA    = path.join(NODE_MODS, 'mocha', 'bin', '_mocha');
 var NPMCHECK  = path.join(NODE_MODS, 'npm-check', 'lib', 'cli.js');
+var CODECLIMATE_TEST_REPORTER =
+  path.join(NODE_MODS, 'codeclimate-test-reporter', 'bin', 'codeclimate.js');
 
 // setup local env with local symlinks and proper configs
 target.setup = function() {
@@ -116,28 +118,15 @@ target['test.cover.send'] = function() {
   }
 
   target['test.cover'](function(){
-    // reads lcov data
     var lcov_path   = path.join(__dirname, 'coverage', 'lcov.info');
-    var lcov        = fs.readFileSync(lcov_path, 'utf-8');
-
-    var node_mods = path.join(
-      __dirname,
-      'node_modules',
-      'codeclimate-test-reporter'
-    );
-
-    var Formatter = require(path.join(node_mods, 'formatter'));
-    var client    = require(path.join(node_mods, 'http_client'));
-
-    var formatter = new Formatter();
-    formatter.format(lcov, function(err, json) {
-      if (err)
-        console.error("A problem occurred parsing the lcov data", err);
-      else {
-        json.repo_token = repo_token;
-        client.postJson(json);
-        console.log('coverage sent to codeclimate');
-      }
+    spawn(node_bin, [CODECLIMATE_TEST_REPORTER], {
+      stdio: [
+        fs.openSync(lcov_path, 'r'),
+        'inherit',
+        'inherit'
+      ]
+    }).on('exit', function() {
+      console.log('coverage sent to codeclimate');
     });
   });
 };

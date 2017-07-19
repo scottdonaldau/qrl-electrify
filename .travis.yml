@@ -2,14 +2,17 @@ os:
   - linux
   - osx
 
+languange: node_js
+node_js:
+  - "4.0.0"
+
+cache:
+  directories:
+    - "node_modules"
+
 install:
-  - rm -rf ~/.nvm
-  - git clone https://github.com/creationix/nvm.git ~/.nvm
-  - source ~/.nvm/nvm.sh
-  - nvm install 4.0.0
-  - nvm use 4.0.0
   - npm install
-  - sudo curl http://install.meteor.com | /bin/sh
+  - curl http://install.meteor.com | /bin/sh
   - node --version
   - meteor --version
 
