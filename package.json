@@ -8,6 +8,13 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "files": [
+    "bin",
+    "lib",
+    "LICENCE",
+    "README.md",
+    "HISTORY.md"
+  ],
   "description": "Package your Meteor apps with Electron, and butter.",
   "author": "Sebastian Große",
   "license": "MIT",
@@ -15,6 +22,7 @@
     "commander": "^2.10.0",
     "electron": "^1.6.11",
     "electron-packager": "^8.7.1",
+    "fs-extra": "^4.0.0",
     "lodash": "^3.10.1",
     "server-destroy": "^1.0.1",
     "shelljs": "^0.7.8",

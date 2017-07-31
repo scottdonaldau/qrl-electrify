@@ -88,8 +88,8 @@ target['test.cover'] = function(done){
       LOGELECTRIFY: 'ALL',
       TESTELECTRIFY: true
     }, process.env)
-  }).on('exit', function(){
-    if(done) done();
+  }).on('exit', function(code){
+    if(done) done(code);
   });
 };
 
@@ -117,7 +117,7 @@ target['test.cover.send'] = function() {
     process.exit(1);
   }
 
-  target['test.cover'](function(){
+  target['test.cover'](function(code){
     var lcov_path   = path.join(__dirname, 'coverage', 'lcov.info');
     spawn(node_bin, [CODECLIMATE_TEST_REPORTER], {
       stdio: [
@@ -127,6 +127,7 @@ target['test.cover.send'] = function() {
       ]
     }).on('exit', function() {
       console.log('coverage sent to codeclimate');
+      process.exit(code);
     });
   });
 };

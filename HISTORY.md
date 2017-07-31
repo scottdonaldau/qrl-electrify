@@ -1,4 +1,4 @@
-3.0.0 / 2017-07-13
+3.0.0 / 2017-07-31
 ==================
   * Removed the atmosphere part of electrify -> created new meteor-electrify-client npm package
   * Updated to use current versions of Electron (1.6.11) and electron-packager
