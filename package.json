@@ -1,5 +1,5 @@
 {
-  "name": "meteor-electrify",
+  "name": "qrl-electrify",
   "version": "3.0.0",
   "main": "lib/index.js",
   "bin": {
@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mairu/meteor-electrify"
+    "url": "https://github.com/scottdonaldau/qrl-electrify"
   },
   "keywords": [
     "electron",
@@ -46,7 +46,7 @@
     "desktop"
   ],
   "bugs": {
-    "url": "https://github.com/mairu/meteor-electrify/issues"
+    "url": "https://github.com/scottdonaldau/qrl-electrify/issues"
   },
-  "homepage": "https://github.com/mairu/meteor-electrify"
+  "homepage": "https://github.com/scottdonaldau/qrl-electrify"
 }
