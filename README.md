@@ -1,11 +1,11 @@
-# (Meteor-)Electrify [![windows](https://img.shields.io/appveyor/ci/Mairu/meteor-electrify.svg?label=windows)](https://ci.appveyor.com/project/Mairu/meteor-electrify) [![travis](https://img.shields.io/travis/Mairu/meteor-electrify/master.svg?label=osx/linux)](https://travis-ci.org/Mairu/meteor-electrify) [![coverage](https://img.shields.io/codeclimate/coverage/github/Mairu/meteor-electrify.svg)](https://codeclimate.com/github/Mairu/meteor-electrify/coverage) [![join the chat at https://gitter.im/arboleya/electrify](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/arboleya/electrify)
+# qrl-electrify - Formally (Meteor-)Electrify
 
 Easily package your Meteor apps with Electron, and *butter*.
 
 ## TL;DR
 
 ````shell
-npm install -g meteor-electrify
+npm install -g qrl-electrify
 cd /your/meteor/app
 electrify
 ````
@@ -59,7 +59,7 @@ $ electrify -h
 ## Installation
 
 ````shell
-npm install -g electrify
+npm install -g qrl-electrify
 ````
 
 > For invoking Electron methods from Meteor, you'll also need to install the
